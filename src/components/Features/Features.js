@@ -1,58 +1,77 @@
 import React, { Component } from 'react';
-import ListElement from '../ListElement/ListElement';
-import util from "../../utils/GeneralUtil";
-import styles from "./Features.css";
+import ListItem from './ListItem/ListItem';
+import util from "../../utils/ClassStringUtils";
+import "./Features.css";
 
-// I am under the impression that the json returning is always correct
-// and 3 levels deep per the design I made.
+const JSON_LEVEL_MAPPINGS = {
+  0: "main-feature",
+  1: "sub-feature",
+  2: "detail-feature"
+};
 
-// I also restrict the nesting to three levels
-// Cons
-// 1) Data not displayed for more than 3 levels
-// 2)
-
-// Pros
-// 1) does not break the design
-// 2)
 class Features extends Component {
-  NESTED_LEVEL = 3;
+  constructor(props){
+    super(props);
+    Features.prioritizeAvailableFeatures(this.props.data || []);
+  }
 
-  createFeaturesList = (feature, keyCount = 0, nestedSubFeatureCount = 0) => {
-    if (nestedSubFeatureCount >= this.NESTED_LEVEL) { return; }
+  // Sort and order top level data
+  static prioritizeAvailableFeatures(inputData) {
+    inputData.sort((a, b) => b.presence - a.presence);
+  }
 
+  static determineStyleClasses(title, presence, levelIdentifier) {
+    return {
+      iconClassName: util.convertToStyleName(title),
+      isAvailableClassName: util.isAvailableStyleName(presence),
+      levelIdentifierClassName: JSON_LEVEL_MAPPINGS[levelIdentifier]
+    }
+  }
+
+  // Level order traversal of JSON Struture
+  createFeaturesList = (feature, keyCount = 0, levelIdentifier = 0) => {
+    if (levelIdentifier > 2) {return;} //Do not parse more than three levels deep
     return feature.map((item) => {
       let nextCount = keyCount + 1;
-      const {title, presence, subfeatures} = item;
-      const titleClassName = util.convertToStyleName(title);
-      const isAvailableClassName = util.isAvailableStyleName(presence);
-      if (subfeatures.length === 0) {
-        let oldKey = keyCount;
-        keyCount += 1;
-        return (
-          <ListElement
-            key={oldKey}
-            titleClassName={titleClassName}
-            isAvailableClassName={isAvailableClassName}
-            title={title}
-          />
-        )
-      } else {
-        let childEl = this.createFeaturesList(subfeatures, nextCount, nestedSubFeatureCount+1);
-        let el = <ListElement
+
+      const { title, presence, subfeatures } = item;
+      const styles = Features.determineStyleClasses(title, presence, levelIdentifier);
+
+      if (subfeatures.length === 0 || !presence) {
+        let el  = <ListItem
           key={keyCount}
-          titleClassName={titleClassName}
-          isAvailableClassName={isAvailableClassName}
+          classNameStyles = {styles}
           title={title}
-          children= {<ul className={"features__sub-list"}>{childEl}</ul>}
+          presence={presence}
         />;
-        keyCount += childEl.length + 1;
+        keyCount += 1;
+        return el;
+      } else {
+        let childEl = this.createFeaturesList(subfeatures, nextCount, levelIdentifier + 1);
+
+        if (childEl) {
+          childEl = childEl.filter((subEl) => subEl.props.presence);
+        }
+
+        let el = <ListItem
+          key={keyCount}
+          classNameStyles = {styles}
+          title={title}
+          presence={presence}
+          children={ childEl &&
+          <ul className={"features__sub-list"}>
+            {childEl}
+          </ul>
+          }
+        />;
+        keyCount += ((childEl || 0) && childEl.length) + 1;
         return el;
       }
     });
   };
 
   render() {
-    return this.createFeaturesList(this.props.data)
+    return this.createFeaturesList(this.props.data || [])
   }
 }
 

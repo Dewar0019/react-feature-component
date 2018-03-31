@@ -1,20 +1,78 @@
-li {
-  position: relative;
-}
-ul {
-  list-style: none outside none;
-  overflow: auto;
+.features--list {
+  > .features__list-item__container {
+    padding-bottom: 10px;
+    width: 100px;
+    text-align: center;
+  }
+  .features__list-item {
+    border: solid 2px #40d9ac;
+    margin: auto;
+    border-radius: 30px;
+    width: 40px;
+    height: 40px;
+    list-style: none;
+
+    & ~span {
+      display: inline-block;
+      margin-left: 3px;
+    }
+  }
 }
 
-.features__list-item {
-  position: relative;
-  backgound-color: teal;
-  border-radius: 49px;
-  width: 300px;
-  height: 50px;
+.features__sub-list {
+  display: flex;
+  flex-direction: column;
+
+  > .features__list-item__container {
+    text-align : center;
+    display: flex;
+  }
+
+  .features__list-item {
+    width: 1px;
+    height: 20px;
+    margin: 0;
+    ~ span {
+      padding-left: 8px;
+      vertical-align: middle;
+      display: inline;
+      white-space: nowrap;
+    }
+  }
+
+  /* For Deep nested Feature*/
+  .feature__list-item__detail-feature {
+    background-image: url("../../images/checkmark.svg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 17px;
+    width: 25px;
+    height: 25px;
+    border: solid 2px #40d9ac;
+  }
+
+  .active {
+    border: solid 2px #ff80ab;
+  }
 }
 
-.unavailable {
-  color: red;
+span {
+  line-height: 30px;
+}
+
+.unavailable ~span {
+  opacity: 0.1;
+  text-decoration: line-through;
+}
+
+svg {
+  margin-top: 6px;
+  width: 28px;
+  height: 28px;
+
+  .unavailable & {
+    fill: gray;
+    opacity: 0.1;
+  }
 }
 

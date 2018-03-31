@@ -1,0 +1,11 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem
+}
+
+.features {
+  display: inline-block;
+  width: 800px;
+  padding-left: 100px;
+  padding-top: 50px;
+}

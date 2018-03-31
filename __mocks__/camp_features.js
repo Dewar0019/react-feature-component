@@ -1,4 +1,4 @@
-const FEATURES = [
+const MOCK_FEATURES = [
   {
     'title': 'Toilet',
     'presence': true,
@@ -11,11 +11,11 @@ const FEATURES = [
   },
   {
     'title': 'Shower',
-    'presence': true,
+    'presence': false,
     'subfeatures': [
       {
         'title': 'Outdoor shower',
-        'presence': true,
+        'presence': false,
         'subfeatures': []
       }
     ]
@@ -49,4 +49,4 @@ const FEATURES = [
   }
 ];
 
-export default FEATURES
+export default MOCK_FEATURES
