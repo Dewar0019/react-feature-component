@@ -2,7 +2,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 # Interview Project
 
-![project_gif](https://i.imgur.com/vesad5V.gifv)
+![](https://i.imgur.com/vesad5V.gif)
 
 ### Setup
 To run this application you must first install dependencies with yarn package manager 
